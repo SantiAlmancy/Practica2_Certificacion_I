@@ -1,12 +1,13 @@
 using Serilog;
 using Microsoft.OpenApi.Models;
 
+var builder = WebApplication.CreateBuilder(args);
+
 //create the logger and setup your sinks, filters and properties
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .CreateBootstrapLogger();
-
-var builder = WebApplication.CreateBuilder(args);
+    .ReadFrom.Configuration(builder.Configuration).Enrich.FromLogContext()
+    .CreateLogger();
 
 //after create the builder - UseSerilog
 builder.Host.UseSerilog();
@@ -45,6 +46,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 */
+Log.Logger.Information("------------------------------- ENVIRONMENT: " + siteTitle + "-------------------------------");
 
 app.UseSwagger();
 app.UseSwaggerUI();
